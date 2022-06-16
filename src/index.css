@@ -11,17 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-.box {
-  width: 100px;
-  height: 100px;
-  border: 1px solid black;
-  border-radius: 5px;
+* {
+  box-sizing: border-box;
 }
-.box--container {
-  width: 300px;
-  height: 200px;
 
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
+body {
+  margin: 0;
+}
+main {
+  background: #0b2434;
+  height: 100vh;
+  padding: 30px 20px;
 }
