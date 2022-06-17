@@ -3,9 +3,20 @@ import Dices from "./Dices";
 import classes from "./GameContainer.module.css";
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
+import Confetti from "react-confetti";
 
 function GameContainer(props) {
   const [diceValue, setDiceValue] = useState(allNewDice());
+  const [tenzies, setTenzies] = useState(false);
+  useEffect(() => {
+    let allHeld = diceValue.every((dice) => dice.isHeld);
+    let firstValue = diceValue[0].value;
+    let sameValues = diceValue.every((dice) => dice.value === firstValue);
+    if (sameValues && allHeld) {
+      setTenzies(true);
+    }
+    console.log(tenzies);
+  }, [diceValue]);
   function allNewDice() {
     const newDice = [];
     for (let i = 0; i < 10; i++) {
@@ -13,7 +24,6 @@ function GameContainer(props) {
     }
     return newDice;
   }
-
   function generateNewDie() {
     return {
       value: Math.ceil(Math.random() * 6),
@@ -36,10 +46,15 @@ function GameContainer(props) {
       })
     );
   };
-
+  const restartGameHandler = () => {
+    setDiceValue(allNewDice());
+    setTenzies(false);
+  };
+  let didYouWon = !tenzies ? "Tenzis" : "You WON !!!";
   return (
     <div className={classes.gameContainer}>
-      <h1 className={classes.title}>Tenzies</h1>
+      <h1 className={classes.title}>{didYouWon}</h1>
+      {tenzies && <Confetti />}
       <p className={classes.infoText}>
         Roll until all dice are the same. Click each die to freeze it at its
         current value between rolls.
@@ -49,9 +64,16 @@ function GameContainer(props) {
         diceValue={diceValue}
         holdDiceHandler={holdDiceHandler}
       />
-      <button className={classes.btnRoll} onClick={newDicesHandler}>
-        Roll
-      </button>
+      {!tenzies && (
+        <button className={classes.btnRoll} onClick={newDicesHandler}>
+          Roll
+        </button>
+      )}
+      {tenzies && (
+        <button className={classes.btnRoll} onClick={restartGameHandler}>
+          Restart Game
+        </button>
+      )}
     </div>
   );
 }
